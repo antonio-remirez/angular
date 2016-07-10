@@ -53,13 +53,10 @@
 
                 $scope.buildings = null;
                 $scope.updateBuildings = function(object){
-
                   if(!$scope.buildings){
                     $scope.buildings = {};
                     for (graphic in object.target.graphics){
-   
                         $scope.buildings[object.target.graphics[graphic].attributes.objectid] = {type:object.target.graphics[graphic].attributes.typdamage, geometry:object.target.graphics[graphic].geometry};
-                      
                     }
                   }
                 };
@@ -89,29 +86,19 @@
 
     <div class="container">
       <div class="blog-header">
-        <h1 class="blog-title">Ejemplo de App - Telefónica</h1>
-        <p class="lead blog-description">Esto es tan solo un ejemplo.</p>
+        <h1 class="blog-title">Ejemplo de App con inclusión GIS</h1>
+        <p class="lead blog-description">Esto es tan solo un ejemplo con angular-esri-map</p>
       </div>
       <div class="row">
-        <div class="col-sm-8 blog-main">
+        <div class="col-sm-6 blog-main">
           <div class="blog-post">
-            <h2 class="blog-post-title">Ejemplo de página con inclusión GIS</h2>
             
-            <hr>
+
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
 
 
-            <!-- mapa -->
+            <!-- tabla con información -->
             <div>
-
-                <esri-map id="map" register-as="map" map-options="map.options">
-                  <esri-feature-layer
-                    url="http://sampleserver6.arcgisonline.com/arcgis/rest/services/CommercialDamageAssessment/FeatureServer/0"
-                    visible="true"
-                    update-end="updateBuildings"
-                  </esri-feature-layer>
-                   
-                </esri-map>   
 
                 <table>
                   <tr ng-repeat="(key, building) in buildings">
@@ -120,7 +107,7 @@
                     <td><button ng-click='zoomToMe(building.geometry);'>Zoom to</button></td>
                   </tr>
                 </table>
-           
+                
             </div>
             
             
@@ -129,17 +116,20 @@
 
           </div><!-- /.blog-post -->
         </div><!-- /.blog-main -->
-        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
-          <div class="sidebar-module sidebar-module-inset">
-            <h4>About</h4>
-            <p>Otros temas relacionados</p>
-          </div>
-          <div class="sidebar-module">
-            <h4>Enlaces de interés</h4>
-            <ol class="list-unstyled">
-              <li><a href="#">Enlace 1</a></li>
-            </ol>
-          </div>
+        <div class="col-sm-6 blog-sidebar">
+          
+          <hr>
+
+          <!-- mapa lateral derecha -->
+          <esri-map id="map" register-as="map" map-options="map.options" width="100%">
+            <esri-feature-layer
+              url="http://sampleserver6.arcgisonline.com/arcgis/rest/services/CommercialDamageAssessment/FeatureServer/0"
+              visible="true"
+              update-end="updateBuildings"
+            </esri-feature-layer>
+             
+          </esri-map>   
+
         </div><!-- /.blog-sidebar -->
       </div><!-- /.row -->
     </div><!-- /.container -->
