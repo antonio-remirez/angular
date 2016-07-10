@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)http://getbootstrap.com/examples/blog/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Bootstrap + Angular + ArcGIS</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="./css/blog.css" rel="stylesheet">
+
+    <!-- load Esri JavaScript API -->
+    <script type="text/javascript" src="//js.arcgis.com/3.13compact"></script>
+    <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.13/esri/css/esri.css">
+    <!-- load Angular -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.js"></script>
+    <!-- load angular-esri-map directives -->
+    <script src="../Angular/dist/v1/dist/angular-esri-map.js"></script>
+
+    <style>
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+    </style>
+
+    <!-- app controller -->
+    <script type="text/javascript">
+        angular.module('esri-map-example', ['esri.map'])
+            .controller('MapController', function ($scope, esriRegistry) {
+                $scope.map = {
+                    options: {
+                        basemap: 'streets',
+                        center: [-88.143,41.774],
+                        zoom: 18,
+                        sliderStyle: 'small'
+                    },
+                };
+
+                $scope.buildings = null;
+                $scope.updateBuildings = function(object){
+
+                  if(!$scope.buildings){
+                    $scope.buildings = {};
+                    for (graphic in object.target.graphics){
+   
+                        $scope.buildings[object.target.graphics[graphic].attributes.objectid] = {type:object.target.graphics[graphic].attributes.typdamage, geometry:object.target.graphics[graphic].geometry};
+                      
+                    }
+                  }
+                };
+
+                $scope.zoomToMe = function(geometry){
+                  esriRegistry.get('map').then(function(map){
+                    map.centerAndZoom(geometry, 18);
+                  });
+                };
+                
+            });
+    </script>
+
+
+  </head>
+
+  <body ng-app="esri-map-example"  ng-controller="MapController">
+
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+          <a class="blog-nav-item active" href="#">Home</a>
+          <a class="blog-nav-item" href="#">Otros proyectos</a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="blog-header">
+        <h1 class="blog-title">Ejemplo de App - Telefónica</h1>
+        <p class="lead blog-description">Esto es tan solo un ejemplo.</p>
+      </div>
+      <div class="row">
+        <div class="col-sm-8 blog-main">
+          <div class="blog-post">
+            <h2 class="blog-post-title">Ejemplo de página con inclusión GIS</h2>
+            
+            <hr>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+
+            <!-- mapa -->
+            <div>
+
+                <esri-map id="map" register-as="map" map-options="map.options">
+                  <esri-feature-layer
+                    url="http://sampleserver6.arcgisonline.com/arcgis/rest/services/CommercialDamageAssessment/FeatureServer/0"
+                    visible="true"
+                    update-end="updateBuildings"
+                  </esri-feature-layer>
+                   
+                </esri-map>   
+
+                <table>
+                  <tr ng-repeat="(key, building) in buildings">
+                    <td>{{key}}</td>
+                    <td>{{building.type}}</td>
+                    <td><button ng-click='zoomToMe(building.geometry);'>Zoom to</button></td>
+                  </tr>
+                </table>
+           
+            </div>
+            
+            
+
+
+
+          </div><!-- /.blog-post -->
+        </div><!-- /.blog-main -->
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>About</h4>
+            <p>Otros temas relacionados</p>
+          </div>
+          <div class="sidebar-module">
+            <h4>Enlaces de interés</h4>
+            <ol class="list-unstyled">
+              <li><a href="#">Enlace 1</a></li>
+            </ol>
+          </div>
+        </div><!-- /.blog-sidebar -->
+      </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+    <footer class="blog-footer"></footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./js/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="./js/jquery.min.js"><\/script>')</script>
+    <script src="./js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./js/ie10-viewport-bug-workaround.js"></script>
+  
+
+</body>
+</html>
